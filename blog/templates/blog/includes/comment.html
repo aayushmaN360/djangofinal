@@ -1,0 +1,26 @@
+<div id="comment-{{ comment.pk }}" class="card mb-3 {% if comment.toxic and not comment.approved %}border-danger shadow-sm{% endif %}">
+    <div class="card-body {% if comment.toxic and not comment.approved %}bg-danger bg-opacity-10{% endif %}">
+        <div class="d-flex justify-content-between">
+            <h6 class="card-title mb-0">{{ comment.author.username }}</h6>
+            <small class="text-muted">{{ comment.created_at|timesince }} ago {% if comment.is_edited %}(edited){% endif %}</small>
+        </div>
+        
+        <p class="card-text mt-2">{{ comment.text|linebreaks }}</p>
+        
+        <div class="d-flex justify-content-between align-items-center mt-2">
+            <div>
+                {% if not comment.approved and comment.toxic %}
+                    <span class="badge bg-danger">Blocked ({{ comment.toxicity_label }})</span>
+                {% endif %}
+            </div>
+            
+            <!-- Show Edit/Delete buttons ONLY to the comment author for their unapproved comments -->
+            {% if user == comment.author and not comment.approved %}
+            <div>
+                <a href="{% url 'edit_my_comment' comment.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a href="{% url 'delete_my_comment' comment.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

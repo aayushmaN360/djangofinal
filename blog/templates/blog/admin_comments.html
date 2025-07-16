@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Comments Moderation Queue</h1>
+    
+    <div class="card">
+        <div class="card-header bg-warning text-dark">
+            <h2 class="h5 mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Flagged for Toxicity</h2>
+        </div>
+        <div class="card-body">
+            {% if comments %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Post</th>
+                            <th>Author</th>
+                            <th>Comment</th>
+                            <th>Date</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for comment in comments %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'post_detail' comment.post.pk %}#comment-{{ comment.pk }}">
+                                    {{ comment.post.title|truncatewords:5 }}
+                                </a>
+                            </td>
+                            <td>{{ comment.author }}</td>
+                            <td>{{ comment.text|truncatewords:15 }}</td>
+                            <td>{{ comment.created_at|date:"M d, Y" }}</td>
+                            <td class="text-center">
+                                <a href="{% url 'approve_comment' comment.pk %}" class="btn btn-sm btn-success" title="Approve">
+                                    <i class="bi bi-check-lg"></i> Approve
+                                </a>
+                                <a href="{% url 'delete_comment' comment.pk %}" class="btn btn-sm btn-danger" title="Delete">
+                                    <i class="bi bi-trash-fill"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            {% if comments.has_other_pages %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if comments.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ comments.previous_page_number }}">Previous</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                    {% endif %}
+                    
+                    {% for i in comments.paginator.page_range %}
+                        {% if comments.number == i %}
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">{{ i }}</span>
+                        </li>
+                        {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if comments.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ comments.next_page_number }}">Next</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+            
+            {% else %}
+            <div class="alert alert-success">
+                <i class="bi bi-check-circle-fill"></i> No toxic comments to moderate. The queue is clear!
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

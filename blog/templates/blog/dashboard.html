@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Your Dashboard</h1>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+
+        <!-- SECTION 1: ACTION REQUIRED -->
+        {% if action_required_comments %}
+        <div class="card border-danger mb-4 shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0"><i class="bi bi-exclamation-octagon-fill"></i> Action Required</h4>
+            </div>
+            <div class="card-body">
+                <p>You have {{ action_required_comments.count }} comment{{ action_required_comments.count|pluralize }} pending review. Please edit it to meet our community standards.</p>
+                <ul class="list-group">
+                    {% for comment in action_required_comments %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                           <span class="d-block"> "{{ comment.text|truncatewords:15 }}"</span>
+                           <small class="text-muted">On post: <a href="{% url 'post_detail' comment.post.pk %}#comment-{{ comment.pk }}">{{ comment.post.title }}</a></small>
+                        </div>
+                        <a href="{% url 'edit_my_comment' comment.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- SECTION 2: MY COMMENT HISTORY -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-chat-left-text-fill"></i> My Comment History</h4>
+            </div>
+            <div class="list-group list-group-flush">
+                {% for comment in all_comments %}
+                <a href="{% url 'post_detail' comment.post.pk %}#comment-{{ comment.pk }}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <p class="mb-1">"{{ comment.text|linebreaksbr }}"</p>
+                        <small class="text-nowrap ms-3">
+                            <!-- THIS IS THE FIX: We now check the 'status' attribute -->
+                            {% if comment.status == 'approved' %}
+                                <span class="badge bg-success">Approved</span>
+                            {% elif comment.status == 'pending_review' %}
+                                <span class="badge bg-warning text-dark">Pending Review</span>
+                            {% elif comment.status == 'rejected' %}
+                                 <span class="badge bg-danger">Rejected</span>
+                            {% endif %}
+                        </small>
+                    </div>
+                    <small class="text-muted">On post: {{ comment.post.title }}</small>
+                </a>
+                {% empty %}
+                <div class="list-group-item">
+                    You haven't posted any comments yet.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 3: NOTIFICATIONS -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-bell-fill"></i> Notifications</h4>
+            </div>
+            <div class="list-group list-group-flush">
+                {% for notification in notifications %}
+                <a href="{% if notification.comment %}{% url 'post_detail' notification.comment.post.pk %}#comment-{{ notification.comment.pk }}{% else %}#{% endif %}" class="list-group-item list-group-item-action">
+                    <p class="mb-1">{{ notification.message }}</p>
+                    <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
+                </a>
+                {% empty %}
+                <div class="list-group-item">
+                    You have no notifications.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

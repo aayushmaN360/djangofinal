@@ -1,0 +1,108 @@
+{% extends "base.html" %} {% load static %}
+<!-- It's good practice to load static, even if not used directly here -->
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <!-- ================================================================= -->
+    <!-- THIS IS THE CORRECTED PART                                        -->
+    <!-- ================================================================= -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0">Latest Posts</h1>
+
+      <!-- This button only shows if the user is logged in -->
+      {% if user.is_authenticated %}
+      <a href="{% url 'post_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle-fill"></i> Create New Post
+      </a>
+      {% endif %}
+    </div>
+    <!-- ================================================================= -->
+    <!-- END OF CORRECTION                                                   -->
+    <!-- ================================================================= -->
+
+    <!-- This loop is correct -->
+    {% for post in posts %}
+    <div class="card post-card">
+      {% if post.photo %}
+      <img
+        src="{{ post.photo.url }}"
+        class="card-img-top"
+        alt="{{ post.title }}"
+      />
+      {% endif %}
+      <div class="card-body">
+        <h2 class="card-title">
+          <a href="{% url 'post_detail' post.pk %}" class="text-decoration-none"
+            >{{ post.title }}</a
+          >
+        </h2>
+        <p class="text-muted">
+          By {{ post.author }} | {{ post.created_at|date:"F d, Y" }}
+          <span class="badge bg-secondary ms-2">
+            {{ post.comments.count }} comment{{ post.comments.count|pluralize }}
+          </span>
+        </p>
+        <p class="card-text">{{ post.content|truncatewords:30 }}</p>
+        <a href="{% url 'post_detail' post.pk %}" class="btn btn-primary"
+          >Read More</a
+        >
+      </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info">
+      <p class="mb-0">There are no posts yet. Be the first to create one!</p>
+    </div>
+    {% endfor %}
+
+    <!-- The pagination logic is correct -->
+    {% if posts and page_obj.has_other_pages %}
+    <nav class="mt-4">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page=1">« First</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}"
+            >Previous</a
+          >
+        </li>
+        {% endif %}
+
+        <li class="page-item disabled">
+          <span class="page-link">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+          </span>
+        </li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}"
+            >Next</a
+          >
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}"
+            >Last »</a
+          >
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">About This Blog</h5>
+        <p class="card-text">
+          This is a community blog where our AI-powered system automatically
+          detects and blocks toxic comments to maintain a positive environment.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

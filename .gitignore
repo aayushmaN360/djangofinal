@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django migrations
+*/migrations/
+!*/migrations/__init__.py
+
+# SQLite database
+*.sqlite3
+
+# Environment variables & secrets
+.env
+.env.*
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+.ENV/
+
+# Logs
+*.log
+
+# pytest / coverage
+htmlcov/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# MyPy / type checks
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# PyCharm / VS Code
+.idea/
+.vscode/
+
+# macOS / Windows / Linux system files
+.DS_Store
+Thumbs.db
+
+# Static & media (if collected/generated)
+staticfiles/
+static/
+media/
+
+# Jupyter / IPython
+.ipynb_checkpoints
+
+# Local postgres or mysql dump
+*.sql
+
+# Translations
+*.mo
+
+# Node (if using for frontend build)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Compiled sass or css cache
+.sass-cache/

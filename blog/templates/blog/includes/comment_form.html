@@ -1,0 +1,15 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Add a Comment</h5>
+        <form method="post" action="{% url 'add_comment' post.pk %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form.text }}
+                <div class="form-text">
+                    Comments are automatically screened for toxicity. Be respectful!
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Post Comment</button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <!-- ================================================================= -->
+        <!-- POST ARTICLE (This part is correct)                               -->
+        <!-- ================================================================= -->
+        <article class="card mb-4">
+            <div class="card-body">
+                <!-- POST HEADER -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h1 class="card-title mb-0">{{ post.title }}</h1>
+                    {% if user == post.author %}
+                        <div>
+                            <a href="{% url 'post_update' post.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a href="{% url 'post_delete' post.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <p class="text-muted">
+                    By {{ post.author.username }} | Published on {{ post.created_at|date:"F d, Y" }}
+                </p>
+
+                <!-- POST PHOTO -->
+                {% if post.photo %}
+                    <img src="{{ post.photo.url }}" class="img-fluid rounded mb-4" alt="{{ post.title }}">
+                {% endif %}
+                
+                <!-- POST CONTENT -->
+                <div class="post-content fs-5 mb-5">
+                    {{ post.content|linebreaks }}
+                </div>
+            </div>
+        </article>
+        
+        <!-- ================================================================= -->
+        <!-- COMMENT SECTION (This is the corrected and simplified part)       -->
+        <!-- ================================================================= -->
+        <section class="comment-section">
+            <h3>Comments</h3>
+            <hr>
+            
+            <!-- 1. The Comment Form -->
+            {% if user.is_authenticated %}
+                {% include "blog/includes/comment_form.html" %}
+            {% else %}
+                <div class="alert alert-info">
+                    You must be <a href="{% url 'login' %}?next={{ request.path }}">logged in</a> to post a comment.
+                </div>
+            {% endif %}
+            
+            <hr class="my-4">
+
+            <!-- 2. The Single, Correct Comments List -->
+            <div class="comment-list">
+                <h4 class="mb-3">Discussion ({{ post.comments.count }})</h4>
+                
+                {% for comment in post.comments.all|dictsort:"created_at" %}
+                    <!-- Logic: Show a comment if it is approved, OR if the current user is the author -->
+                    {% if comment.approved or user == comment.author %}
+                        {% include "blog/includes/comment.html" with comment=comment %}
+                    {% endif %}
+                {% empty %}
+                    <p class="text-muted">No comments yet. Be the first to start the discussion!</p>
+                {% endfor %}
+            </div>
+        </section>
+        <!-- ================================================================= -->
+        <!-- END OF CORRECTION                                                   -->
+        <!-- ================================================================= -->
+    </div>
+</div>
+{% endblock %}
