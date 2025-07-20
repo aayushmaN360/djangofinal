@@ -1,0 +1,10 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+    <div class="content-section text-center">
+        <h1>500 - Server Error</h1>
+        <p>We're sorry, but something went wrong on our end.</p>
+        <p>Our team has been notified, and we are working to fix it.</p>
+        <a class="btn btn-outline-info" href="{% url 'post_list' %}">Go Back to the Homepage</a>
+    </div>
+{% endblock content %}

@@ -1,33 +1,59 @@
 from django.contrib import admin
-from .models import Post, Comment, Notification
+from django.utils.html import format_html # <-- Import this
+from .models import Post, Comment, Notification, Genre
+
+
+@admin.register(Genre)
+class GenreAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'created_at')
+    list_display = ('title', 'author','genre', 'created_at')
     search_fields = ('title', 'content')
-    list_filter = ('created_at', 'author')
+    list_filter = ('created_at', 'author','genre')
 
 # =============================================================================
-# THIS IS THE CLASS YOU NEED TO MODIFY
+# THIS IS THE CORRECTED CLASS
 # =============================================================================
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    # Use the new 'status' field for display and filtering
-    list_display = ('post', 'author', 'created_at', 'status', 'toxicity_label')
-    list_filter = ('status', 'created_at', 'post') # Filter by the new status
+    # Use the new display_status function in the list display
+    list_display = ('post', 'author', 'created_at', 'display_status', 'toxicity_label')
+    list_filter = ('status', 'created_at', 'post')
+    search_fields = ('text', 'author__username', 'post__title')
     
-    # We can create a new action to approve comments
-    actions = ['approve_comments', 'reject_comments']
+    # Define the actions
+    actions = ['approve_comments', 'delete_reported_comments']
 
+    # 1. NEW FUNCTION to add color to the status column
+    def display_status(self, obj):
+        if obj.status == 'approved':
+            color = 'green'
+        elif obj.status == 'pending_review':
+            color = 'orange'
+        elif obj.status == 'reported':
+            color = 'red'
+        else:
+            color = 'black'
+        # get_status_display() shows the user-friendly name (e.g., "Pending Review")
+        return format_html(f'<b style="color: {color};">{obj.get_status_display()}</b>')
+    
+    display_status.short_description = 'Status'
+    display_status.admin_order_field = 'status'
+
+    # 2. RENAMED ACTION for clarity
     def approve_comments(self, request, queryset):
-        # Update the status of the selected comments to 'approved'
+        # Update the status to 'approved'
         queryset.update(status='approved')
-    approve_comments.short_description = "Approve selected comments"
+    approve_comments.short_description = "Mark selected comments as Approved"
 
-    def reject_comments(self, request, queryset):
-        # Update the status to 'rejected'
-        queryset.update(status='rejected')
-    reject_comments.short_description = "Reject selected comments"
+    # 3. IMPROVED ACTION to delete instead of just marking as rejected
+    def delete_reported_comments(self, request, queryset):
+        # This is more decisive for bad comments
+        queryset.delete()
+    delete_reported_comments.short_description = "Delete selected comments"
 
 # =============================================================================
 # NO CHANGES NEEDED BELOW

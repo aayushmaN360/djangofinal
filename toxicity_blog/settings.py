@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'blog.apps.BlogConfig', 
     'django.contrib.humanize',
+    'ckeditor', 
+    
+    
 ]
 
 MIDDLEWARE = [
@@ -66,24 +69,28 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 'django.template.context_processors.debug',
-                'blog.context_processors.notifications_processor',
+                'blog.context_processors.extras_context',
                 'django.template.context_processors.media', 
+                
             ],
         },
     },
 ]
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "ERROR", # Log only ERROR level and higher
+            "class": "logging.FileHandler",
+            "filename": "debug.log", # The file to save logs to
         },
     },
-    'loggers': {
-        'django.template': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "ERROR",
+            "propagate": True,
         },
     },
 }
@@ -147,3 +154,4 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGOUT_REDIRECT_URL = 'post_list'
 LOGIN_REDIRECT_URL = 'post_list'
+

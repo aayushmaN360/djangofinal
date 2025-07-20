@@ -1,134 +1,147 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Your head content remains the same -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Toxicity Blog</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚫</text></svg>">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <style>
-        .navbar-brand {
-            font-weight: bold;
-        }
-        .post-card {
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .post-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        .comment-section {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        .notification-badge {
-            position: relative;
-        }
-        .badge-count {
-            position: absolute;
-            top: 0px; /* Adjusted position for better alignment */
-            right: -5px;
-        }
-        .dropdown-item i { /* Style for icons in dropdown */
-            margin-right: 8px;
-        }
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚫</text></svg>"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"/>
+
+      <style>
+      /* Base styles for the page structure (Sticky Footer Fix) */
+      html, body {
+        height: 100%;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        background-color: #f8f9fa;
+        padding-top: 70px; /* Space for the fixed navbar */
+      }
+      main {
+        flex-grow: 1; /* Makes the main content area fill all available space */
+      }
+
+      /* Component-specific styles */
+      .navbar {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .card {
+        border: none;
+      }
+      .notification-badge {
+        position: relative;
+      }
+      .badge-count {
+        position: absolute;
+        top: 5px;
+        right: -2px;
+        font-size: 0.6em;
+      }
+      .hero-section {
+        background-size: cover;
+        background-position: center;
+        position: relative;
+      }
+      .hero-section > .col-md-6 {
+        position: relative;
+        z-index: 1;
+        background-color: rgba(0, 0, 0, 0.4);
+        padding: 2rem !important;
+        border-radius: .3rem;
+      }
     </style>
+
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'post_list' %}">🚫 Toxicity Blog</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'post_list' %}">Home</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-                    </li>
-                    {% if user.is_superuser %}
-                    <li class="nav-item">
-                         <a class="nav-link" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
-                    </li>
-                    {% endif %}
-                    {% endif %}
+    <!-- THIS IS THE FINAL, CORRECTED NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="{% url 'post_list' %}">🚫 Toxicity Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          
+          <!-- Left-side Nav Items (Simple Home Link) -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'post_list' %}">Home</a>
+            </li>
+          </ul>
+
+          <!-- Search Form -->
+          <form class="d-flex me-3" method="get" action="{% url 'search_results' %}">
+            <input class="form-control me-2" type="search" placeholder="Search" name="q"/>
+            <button class="btn btn-outline-light" type="submit">Search</button>
+          </form>
+
+          <!-- Right-side Nav Items -->
+          <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+              <!-- This entire section is for LOGGED-IN users -->
+              <li class="nav-item notification-badge me-2">
+                <a class="nav-link" href="{% url 'dashboard' %}">
+                  <i class="bi bi-bell-fill fs-5"></i>
+                  {% if unread_notifications_count > 0 %}<span class="badge bg-danger rounded-pill badge-count">{{ unread_notifications_count }}</span>{% endif %}
+                </a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                  <i class="bi bi-person-circle fs-5"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><h6 class="dropdown-header">Welcome, {{ user.username }}</h6></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li><a class="dropdown-item" href="{% url 'dashboard' %}"><i class="bi bi-layout-text-sidebar-reverse"></i> Dashboard</a></li>
+                  {% if perms.blog.add_post %}<li><a class="dropdown-item" href="{% url 'post_create' %}"><i class="bi bi-plus-circle-fill"></i> Create Post</a></li>{% endif %}
+                  {% if user.is_superuser %}<li><a class="dropdown-item" href="{% url 'admin_dashboard' %}"><i class="bi bi-shield-lock-fill"></i> Admin Tools</a></li>{% endif %}
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <form method="post" action="{% url 'logout' %}" class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i> Logout</button>
+                    </form>
+                  </li>
                 </ul>
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
-                    <li class="nav-item notification-badge me-2">
-                        <a class="nav-link" href="{% url 'dashboard' %}">
-                            <i class="bi bi-bell-fill"></i>
-                            {% if unread_notifications_count > 0 %}
-                            <span class="badge bg-danger rounded-pill badge-count">
-                                {{ unread_notifications_count }}
-                            </span>
-                            {% endif %}
-                        </a>
-                    </li>
-                    <!-- USER DROPDOWN MENU -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                           <i class="bi bi-person-circle"></i> Welcome, {{ user.username }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
-                            <li><a class="dropdown-item" href="{% url 'dashboard' %}"><i class="bi bi-layout-text-sidebar-reverse"></i> Dashboard</a></li>
-                            <li><a class="dropdown-item" href="{% url 'password_change' %}"><i class="bi bi-key-fill"></i> Change Password</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-            <form method="post" action="{% url 'logout' %}" style="margin: 0;">
-                {% csrf_token %}
-                <button type="submit" class="dropdown-item">
-                    <i class="bi bi-box-arrow-right"></i> Logout
-                </button>
-            </form>
-        </li>
-    </ul>
-</li>
-                    {% else %}
-                    <!-- LOGGED OUT USERS -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-outline-light" href="{% url 'register' %}" style="margin-left: 0.5rem;">Register</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
+              </li>
+            {% else %}
+              <!-- This section is for LOGGED-OUT users -->
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link btn btn-outline-light ms-2" href="{% url 'register' %}">Register</a>
+              </li>
+            {% endif %}
+          </ul>
         </div>
+      </div>
     </nav>
 
-    <div class="container mt-4">
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <!-- The rest of your base template is correct -->
+    <main role="main" class="container-fluid">
+      {% if messages %}
+        <div class="container">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show my-3" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-            {% endfor %}
-        {% endif %}
-        
-        {% block content %}{% endblock %}
-    </div>
-
-    <footer class="py-4 bg-light mt-5">
-        <div class="container text-center">
-            <p class="mb-0">© {% now "Y" %} Toxicity Blog. All rights reserved.</p>
+          {% endfor %}
         </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="py-4 mt-5 bg-light">
+      <div class="container text-center">
+        <p class="text-muted mb-0">© {% now "Y" %} Toxicity Blog. All Rights Reserved.</p>
+      </div>
     </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block javascript %}{% endblock %}
+  </body>
 </html>

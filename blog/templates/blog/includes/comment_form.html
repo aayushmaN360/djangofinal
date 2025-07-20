@@ -1,15 +1,24 @@
-<div class="card mb-4">
-    <div class="card-body">
-        <h5 class="card-title">Add a Comment</h5>
-        <form method="post" action="{% url 'add_comment' post.pk %}">
-            {% csrf_token %}
-            <div class="mb-3">
-                {{ form.text }}
-                <div class="form-text">
-                    Comments are automatically screened for toxicity. Be respectful!
+<div id="top-level-form-container">
+    <form method="POST" action="{% url 'add_comment' post.pk %}" id="comment-form">
+        {% csrf_token %}
+        <input type="hidden" name="parent_id" id="id_parent_id">
+        
+        <h5 id="comment-form-label">Add Your Comment</h5>
+        <div class="mb-3">
+            {{ form.text }}
+             <small id="word-count" class="form-text text-muted">0 / 100 words</small>
+
+            <!-- This is where Django will show the backend validation error -->
+            {% if form.text.errors %}
+                <div class="text-danger mt-1">
+                    {{ form.text.errors }}
                 </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Post Comment</button>
-        </form>
-    </div>
+            {% endif %}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit Comment</button>
+        <button type="button" class="btn btn-secondary d-none" id="cancel-reply-btn">Cancel Reply</button>
+    </form>
 </div>
+
+

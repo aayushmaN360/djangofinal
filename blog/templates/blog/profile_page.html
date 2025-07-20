@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-body">
+        <h1 class="card-title">{{ profile_user.username }}'s Profile</h1>
+        <p class="text-muted">Joined: {{ profile_user.date_joined|date:"F Y" }}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Posts by {{ profile_user.username }} ({{ posts.count }})</h3>
+        <hr>
+        <div class="list-group">
+            {% for post in posts %}
+                <a href="{{ post.get_absolute_url }}" class="list-group-item list-group-item-action">
+                    {{ post.title }}
+                </a>
+            {% empty %}
+                <p>{{ profile_user.username }} has not created any posts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h3>Comments by {{ profile_user.username }} ({{ comments.count }})</h3>
+        <hr>
+        <div class="list-group">
+            {% for comment in comments %}
+                <a href="{% url 'post_detail' comment.post.pk %}#comment-{{comment.pk}}" class="list-group-item list-group-item-action">
+                    "{{ comment.text|truncatewords:15 }}"
+                </a>
+            {% empty %}
+                <p>{{ profile_user.username }} has not made any comments yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

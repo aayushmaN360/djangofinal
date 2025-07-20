@@ -48,39 +48,7 @@
             
             <!-- Pagination -->
             {% if comments.has_other_pages %}
-            <nav class="mt-4">
-                <ul class="pagination justify-content-center">
-                    {% if comments.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ comments.previous_page_number }}">Previous</a>
-                    </li>
-                    {% else %}
-                    <li class="page-item disabled">
-                        <span class="page-link">Previous</span>
-                    </li>
-                    {% endif %}
-                    
-                    {% for i in comments.paginator.page_range %}
-                        {% if comments.number == i %}
-                        <li class="page-item active" aria-current="page">
-                            <span class="page-link">{{ i }}</span>
-                        </li>
-                        {% else %}
-                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if comments.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ comments.next_page_number }}">Next</a>
-                    </li>
-                    {% else %}
-                    <li class="page-item disabled">
-                        <span class="page-link">Next</span>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
+            {% include 'blog/includes/pagination.html' %}
             {% endif %}
             
             {% else %}

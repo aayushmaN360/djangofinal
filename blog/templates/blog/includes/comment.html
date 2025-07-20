@@ -1,26 +1,51 @@
-<div id="comment-{{ comment.pk }}" class="card mb-3 {% if comment.toxic and not comment.approved %}border-danger shadow-sm{% endif %}">
-    <div class="card-body {% if comment.toxic and not comment.approved %}bg-danger bg-opacity-10{% endif %}">
-        <div class="d-flex justify-content-between">
-            <h6 class="card-title mb-0">{{ comment.author.username }}</h6>
-            <small class="text-muted">{{ comment.created_at|timesince }} ago {% if comment.is_edited %}(edited){% endif %}</small>
+{% if comment.status == 'approved' or user == comment.author or user.is_superuser %}
+
+    <div class="d-flex mb-3" id="comment-{{ comment.pk }}" style="margin-left: {% if comment.parent %}40px{% else %}0px{% endif %};">
+        <div class="flex-shrink-0">
+            <i class="bi bi-person-circle fs-2 text-muted"></i>
         </div>
-        
-        <p class="card-text mt-2">{{ comment.text|linebreaks }}</p>
-        
-        <div class="d-flex justify-content-between align-items-center mt-2">
-            <div>
-                {% if not comment.approved and comment.toxic %}
-                    <span class="badge bg-danger">Blocked ({{ comment.toxicity_label }})</span>
+        <div class="ms-3 flex-grow-1">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <strong class="me-2">{{ comment.author.username }}</strong>
+                    <small class="text-muted">{{ comment.created_at|timesince }} ago {% if comment.is_edited %}(edited){% endif %}</small>
+                </div>
+                {% if comment.status != 'approved' %}
+                    <span class="badge 
+                        {% if comment.status == 'pending_review' %}bg-warning text-dark
+                        {% elif comment.status == 'reported' %}bg-danger
+                        {% endif %}">
+                        {{ comment.get_status_display }}
+                    </span>
                 {% endif %}
             </div>
             
-            <!-- Show Edit/Delete buttons ONLY to the comment author for their unapproved comments -->
-            {% if user == comment.author and not comment.approved %}
-            <div>
-                <a href="{% url 'edit_my_comment' comment.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                <a href="{% url 'delete_my_comment' comment.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            <p class="mt-1 mb-2">{{ comment.text|linebreaksbr }}</p>
+
+            <div class="comment-actions small">
+                <!-- Reply Button -->
+                {% if user.is_authenticated %}
+                <button class="btn btn-sm btn-link text-muted text-decoration-none reply-btn" 
+                        data-comment-id="{{ comment.pk }}" 
+                        data-author="{{ comment.author.username }}">Reply</button>
+                {% endif %}
+
+                <!-- Edit Button -->
+                {% if user == comment.author or user.is_superuser %}
+                    <a href="{% url 'edit_my_comment' comment.pk %}" class="btn btn-sm btn-link text-muted text-decoration-none">Edit</a>
+                {% endif %}
+
+                <!-- Report Button -->
+                {% if user.is_authenticated and comment.status == 'approved' and user != comment.author %}
+                    <a href="{% url 'report_comment' comment.pk %}" class="btn btn-sm btn-link text-danger text-decoration-none">Report</a>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
     </div>
-</div>
+
+    <!-- Recursive include for replies -->
+    {% for reply in comment.replies.all %}
+        {% include "blog/includes/comment.html" with comment=reply %}
+    {% endfor %}
+
+{% endif %}

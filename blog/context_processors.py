@@ -1,7 +1,16 @@
-from .models import Notification
+from .models import Notification, Genre
 
-def notifications_processor(request):  # <--- The function name is "notifications_processor"
+# Rename this function to match what settings.py is looking for
+def extras_context(request):
+    """
+    This context processor makes extra data available to ALL templates.
+    """
+    context = {
+        'unread_notifications_count': 0,
+        'all_genres': Genre.objects.all()
+    }
+
     if request.user.is_authenticated:
-        unread_count = Notification.objects.filter(user=request.user, read=False).count()
-        return {'unread_notifications_count': unread_count}
-    return {}
+        context['unread_notifications_count'] = Notification.objects.filter(user=request.user, read=False).count()
+    
+    return context
