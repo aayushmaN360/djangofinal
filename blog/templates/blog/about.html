@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}About - Sanity Check{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+
+        <!-- Hero Section -->
+        <div class="text-center my-5">
+            <div class="mb-4">
+                <i class="bi bi-shield-slash-fill text-danger" style="font-size: 4rem;"></i>
+            </div>
+            <h1 class="display-4 fw-bold text-dark mb-3">About Sanity Check</h1>
+            <p class="lead text-muted">Creating a safer, more positive internet one post at a time.</p>
+        </div>
+
+        <!-- Our Story Section -->
+        <div class="mb-5">
+            <h2 class="fw-bold text-dark border-bottom pb-2 mb-4">Our Mission</h2>
+            <p class="text-muted">
+                Sanity Check is dedicated to fostering healthy online discussions and combating digital toxicity. We believe in creating a platform where ideas can be shared constructively and communities can thrive without harmful behavior.
+            </p>
+
+            <h3 class="fw-bold text-dark mt-5 mb-3">What We Do</h3>
+            <p class="text-muted">
+                We focus on providing clear resources and fostering a strong community through:
+            </p>
+            <ul class="list-unstyled text-muted">
+                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Clear, fair guidelines that promote healthy discussion.</li>
+                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Educational resources and tips for digital citizenship.</li>
+                <li class="mb-0"><i class="bi bi-check-circle-fill text-success me-2"></i>Safe spaces for vulnerable communities to connect.</li>
+            </ul>
+
+             <h3 class="fw-bold text-dark mt-5 mb-3">Our Team</h3>
+             <p class="text-muted">
+                We're a passionate group of developers, community managers, and advocates who believe in making the internet a better place. Our team combines technical expertise with a deep understanding of online community dynamics.
+             </p>
+        </div>
+
+
+        <!-- Values Section -->
+        <div class="bg-light p-4 p-md-5 rounded-3 mb-5">
+            <h2 class="fw-bold mb-4 text-center text-dark">Our Core Values</h2>
+            <div class="row">
+                <div class="col-md-4 text-center mb-4 mb-md-0">
+                    <i class="bi bi-heart-fill text-danger mb-3" style="font-size: 2.5rem;"></i>
+                    <h5 class="fw-bold">Respect</h5>
+                    <p class="text-muted small">Treating every member with dignity and understanding.</p>
+                </div>
+                <div class="col-md-4 text-center mb-4 mb-md-0">
+                    <i class="bi bi-shield-check text-primary mb-3" style="font-size: 2.5rem;"></i>
+                    <h5 class="fw-bold">Safety</h5>
+                    <p class="text-muted small">Creating secure spaces free from harassment and harm.</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <i class="bi bi-people-fill text-success mb-3" style="font-size: 2.5rem;"></i>
+                    <h5 class="fw-bold">Inclusion</h5>
+                    <p class="text-muted small">Welcoming diverse perspectives and backgrounds.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Join Us Section -->
+        <div class="text-center p-4 rounded-3 mb-5" style="background-color: #f8f9fa;">
+            <h3 class="fw-bold mb-3 text-dark">Join Our Mission</h3>
+            <p class="text-muted mb-4">
+                Be part of the solution. Help us build a more positive internet for everyone.
+            </p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-4 gap-3">
+                    <i class="bi bi-person-plus me-2"></i>Join Community
+                </a>
+                <a href="{% url 'contacts' %}" class="btn btn-outline-secondary btn-lg px-4">
+                    <i class="bi bi-envelope me-2"></i>Get In Touch
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

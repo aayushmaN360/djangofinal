@@ -10,37 +10,26 @@ print("--- Starting Local Model Training Process ---")
 # ==============================================================================
 #  STEP 1: DEFINE FILE PATHS AND LOAD DATA
 # ==============================================================================
-# This script assumes it is located in the 'blog' app directory.
-
-# Get the directory where this script is located (i.e., the 'blog' folder)
 script_dir = os.path.dirname(__file__)
-
-# Define the full path to the dataset and the output model file
 DATASET_PATH = os.path.join(script_dir, 'balanced_3class_toxic_dataset.csv')
 OUTPUT_MODEL_PATH = os.path.join(script_dir, 'naive_bayes_model.pkl')
 
 print(f"\nAttempting to load dataset from: {DATASET_PATH}")
-
 try:
     df = pd.read_csv(DATASET_PATH)
     print(f"Successfully loaded dataset with {len(df)} rows.")
 except FileNotFoundError:
-    print(f"\n!!! ERROR: Dataset not found at the expected location.")
-    print("Please make sure 'balanced_3class_toxic_dataset.csv' is inside your 'blog' app folder.")
-    exit() # Stop the script if the data isn't found
-except Exception as e:
-    print(f"\n!!! ERROR: Could not read the CSV file. Please check for formatting errors. Details: {e}")
+    print(f"\n!!! ERROR: Dataset not found. Please make sure '{DATASET_PATH}' is correct.")
     exit()
 
 # ==============================================================================
 #  STEP 2: RUN THE ENTIRE TRAINING & EVALUATION PROCESS
 # ==============================================================================
-# This is the same robust training and evaluation logic from the Colab script.
 
 # --- 2a. Define Preprocessing Functions ---
 stop_words = {
     'i','me','my','myself','we','our','ours','ourselves','you','your','yours','yourself',
-    'yourselves','he','him','his','himself','she','her','hers','herself','it','its','itself',
+    'yourselves','he','him','his','himself','she','her','herself','it','its','itself',
     'they','them','their','theirs','themselves','what','which','who','whom','this','that','these',
     'those','am','is','are','was','were','be','been','being','have','has','had','having','do',
     'does','did','doing','a','an','the','and','but','if','or','because','as','until','while','of',
@@ -68,7 +57,6 @@ def preprocess(text):
 df = df.sample(frac=1, random_state=42).reset_index(drop=True)
 split_idx = int(0.8 * len(df))
 train_df, test_df = df.iloc[:split_idx], df.iloc[split_idx:]
-
 X_train, y_train = train_df['comment_text'].tolist(), train_df['label'].tolist()
 X_test, y_test = test_df['comment_text'].tolist(), test_df['label'].tolist()
 print("Data loaded and split successfully.")
@@ -82,9 +70,23 @@ vocab = sorted(list(vocab))
 word2idx = {word: i for i, word in enumerate(vocab)}
 
 print("Training Naive Bayes model...")
+
+# --- THIS IS THE CORRECTED, UNWEIGHTED LOGIC ---
 classes = sorted(list(set(y_train)))
 class_counts = Counter(y_train)
+class_weights = {
+    'non-toxic': 1.0,      # Normal importance
+    'toxic': 1.5,          # 50% more important
+    'highly-toxic': 2.5    # 150% more important (very high penalty for misses)
+}
+
+# Adjust the raw counts by these weights
+weighted_counts = {c: class_counts[c] * class_weights.get(c, 1.0) for c in classes}
+total_weighted_count = sum(weighted_counts.values())
+
+# The original, simple calculation for priors based on class frequency
 priors = {c: np.log(class_counts[c] / len(y_train)) for c in classes}
+# --- END OF CORRECTION ---
 
 alpha = 1
 word_counts_per_class = {c: np.ones(len(vocab)) * alpha for c in classes}
@@ -100,7 +102,7 @@ for text, label in zip(X_train, y_train):
 likelihoods = {c: np.log(word_counts_per_class[c] / total_words_per_class[c]) for c in classes}
 print("Model training complete.")
 
-# --- 2d. Evaluate the Model (with Full Classification Report) ---
+# --- 2d. Evaluate the Model ---
 def predict(text):
     tokens = preprocess(text)
     class_scores = {c: priors[c] for c in classes}
@@ -115,6 +117,7 @@ def predict(text):
 print("\nEVALUATING MODEL ON TEST SET...")
 y_pred = [predict(text) for text in X_test]
 
+# ... The rest of the evaluation code (Confusion Matrix, Report, etc.) is correct ...
 conf_matrix = {true_class: {pred_class: 0 for pred_class in classes} for true_class in classes}
 for true_label, pred_label in zip(y_test, y_pred):
     conf_matrix[true_label][pred_label] += 1

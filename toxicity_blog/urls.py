@@ -8,18 +8,14 @@ from django.conf.urls.static import static
 # This is the correct order for the URL patterns.
 # Your app's URLs are checked before the Django admin URLs.
 urlpatterns = [
-    
-    # 1. This includes all URLs from your 'blog' app (like admin/comments/).
-    #    It will be checked first.
-    path('', include('blog.urls')),
+     # ✅ Root-level blog URLs
+     path('', include('blog.urls')),
 
-    # 2. This includes the default Django admin site (for managing models).
-    #    It will be checked second.
+    # 2. The admin path comes AFTER. Django will only check this if no match was found above.
     path('admin/', admin.site.urls),
 
-    # 3. This includes all the built-in authentication URLs (login, logout, etc.).
+    # 3. The accounts path is also specific.
     path('accounts/', include('django.contrib.auth.urls')),
-
 ]
 
 # This part is for serving user-uploaded media files (like post photos) during development.

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy - Sanity Check{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+
+        <!-- Page Header -->
+        <div class="text-center my-5">
+            <div class="mb-4">
+                <i class="bi bi-shield-lock-fill text-primary" style="font-size: 4rem;"></i>
+            </div>
+            <h1 class="display-4 fw-bold text-dark mb-3">Privacy Policy</h1>
+            <p class="lead text-muted">Your privacy is important to us. Last updated: July 21, 2025.</p>
+        </div>
+
+        <!-- Policy Content -->
+        <div class="mb-5">
+            <p class="text-muted">
+                Welcome to Sanity Check. We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains what information we collect, how we use it, and what rights you have in relation to it.
+            </p>
+
+            <h3 class="fw-bold text-dark mt-5 mb-3">1. What Information We Collect</h3>
+            <p class="text-muted">We collect information in the following ways:</p>
+            <ul class="text-muted">
+                <li><strong>Information you provide to us:</strong> When you register for an account, post a comment, or contact us directly, you may provide us with personal information such as your username, email address, and the content of your messages.</li>
+                <li><strong>Information we collect automatically:</strong> Like most websites, we use cookies and similar technologies to collect information about your device and how you interact with our site (such as your IP address and browser type). This helps us maintain and improve our service.</li>
+            </ul>
+
+            <h3 class="fw-bold text-dark mt-5 mb-3">2. How We Use Your Information</h3>
+            <p class="text-muted">We use the information we collect to:</p>
+            <ul class="text-muted">
+                <li>Provide, operate, and maintain our blog.</li>
+                <li>Improve and personalize your experience.</li>
+                <li>Communicate with you, respond to your comments, and provide support.</li>
+                <li>Monitor and analyze usage to prevent toxic behavior and protect the safety of our community.</li>
+                <li>Enforce our terms and community guidelines.</li>
+            </ul>
+
+            <h3 class="fw-bold text-dark mt-5 mb-3">3. How We Share Your Information</h3>
+            <p class="text-muted">
+                We do not sell or rent your personal information to third parties. Your information may be shared only in the following situations:
+            </p>
+            <ul class="text-muted">
+                <li>With your consent or at your direction.</li>
+                <li>To comply with legal obligations or to protect the rights and safety of our users and the public.</li>
+                <li>With service providers who perform services on our behalf (e.g., website hosting), who are obligated to protect your data.</li>
+            </ul>
+
+            <h3 class="fw-bold text-dark mt-5 mb-3">4. Cookies and Web Beacons</h3>
+            <p class="text-muted">
+                We use "cookies" to help personalize your online experience. A cookie is a text file that is placed on your hard disk by a web page server. You have the ability to accept or decline cookies. Most web browsers automatically accept cookies, but you can usually modify your browser setting to decline cookies if you prefer.
+            </p>
+
+            <h3 class="fw-bold text-dark mt-5 mb-3">5. Your Data Rights</h3>
+             <p class="text-muted">
+                You have the right to access, update, or delete the personal information we have on you. If you have an account on our blog, you can typically manage your information from your profile settings. For any other requests, please contact us.
+            </p>
+            
+            <h3 class="fw-bold text-dark mt-5 mb-3">6. Changes to This Policy</h3>
+            <p class="text-muted">
+                We may update this privacy policy from time to time. We will notify you of any changes by posting the new privacy policy on this page. We encourage you to review this page periodically for any changes.
+            </p>
+
+            <h3 class="fw-bold text-dark mt-5 mb-3">7. Contact Us</h3>
+            <p class="text-muted">
+                If you have any questions or concerns about this Privacy Policy, please visit our <a href="{% url 'contacts' %}">Contact Page</a>.
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

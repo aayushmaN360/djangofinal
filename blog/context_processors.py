@@ -1,4 +1,4 @@
-from .models import Notification, Genre
+from .models import Notification, Genre ,SiteSettings
 
 # Rename this function to match what settings.py is looking for
 def extras_context(request):
@@ -7,7 +7,8 @@ def extras_context(request):
     """
     context = {
         'unread_notifications_count': 0,
-        'all_genres': Genre.objects.all()
+        'all_genres': Genre.objects.all(),
+        'site_settings': SiteSettings.objects.first() 
     }
 
     if request.user.is_authenticated:

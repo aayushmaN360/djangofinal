@@ -1,0 +1,11 @@
+<ul class="list-group list-group-flush">
+    {% for comment in action_required_comments %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            <blockquote class="mb-1 fst-italic">"{{ comment.text|truncatewords:15 }}"</blockquote>
+            <small class="text-muted">On: <a href="{% url 'post_detail' comment.post.pk %}">{{ comment.post.title }}</a></small>
+        </div>
+        <a href="{% url 'edit_my_comment' comment.pk %}" class="btn btn-warning btn-sm">Edit</a>
+    </li>
+    {% endfor %}
+</ul>

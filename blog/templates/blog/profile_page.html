@@ -1,38 +1,55 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="card mb-4">
-    <div class="card-body">
-        <h1 class="card-title">{{ profile_user.username }}'s Profile</h1>
-        <p class="text-muted">Joined: {{ profile_user.date_joined|date:"F Y" }}</p>
+<div class="profile-page">
+    <!-- Profile Banner and Avatar (Suggestion #3) -->
+    <div class="profile-banner">
+        <img src="{{ profile_user.profile.image.url }}" class="profile-avatar" alt="{{ profile_user.username }}">
     </div>
-</div>
 
-<div class="row">
-    <div class="col-md-6">
-        <h3>Posts by {{ profile_user.username }} ({{ posts.count }})</h3>
-        <hr>
-        <div class="list-group">
-            {% for post in posts %}
-                <a href="{{ post.get_absolute_url }}" class="list-group-item list-group-item-action">
-                    {{ post.title }}
-                </a>
-            {% empty %}
-                <p>{{ profile_user.username }} has not created any posts yet.</p>
-            {% endfor %}
-        </div>
+    <div class="profile-header text-center">
+        <h1 class="display-5">{{ profile_user.username }}</h1>
+        <p class="text-muted">Member since {{ profile_user.date_joined|date:"F Y" }}</p>
+        {% if profile_user.profile.bio %}<p class="lead">{{ profile_user.profile.bio }}</p>{% endif %}
+
+        <!-- Hide Action Button if Not the Owner (Suggestion #2) -->
+        {% if user == profile_user %}
+            <a class="btn btn-primary" href="{% url 'dashboard' %}"><i class="bi bi-pencil-square"></i> Go to Dashboard to Edit</a>
+        {% endif %}
     </div>
-    <div class="col-md-6">
-        <h3>Comments by {{ profile_user.username }} ({{ comments.count }})</h3>
-        <hr>
-        <div class="list-group">
-            {% for comment in comments %}
-                <a href="{% url 'post_detail' comment.post.pk %}#comment-{{comment.pk}}" class="list-group-item list-group-item-action">
-                    "{{ comment.text|truncatewords:15 }}"
-                </a>
+
+    <hr class="my-4">
+
+    <!-- Tabs for Posts and Comments (Suggestion #4) -->
+    <ul class="nav nav-tabs justify-content-center" id="profileTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts" type="button">Posts ({{ posts.count }})</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments" type="button">Comments ({{ comments.count }})</button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-4" id="profileTabContent">
+        <!-- Posts Tab -->
+        <div class="tab-pane fade show active" id="posts" role="tabpanel">
+            <div class="list-group">
+            {% for post in posts %}
+                <a href="{{ post.get_absolute_url }}" class="list-group-item list-group-item-action">{{ post.title }}</a>
             {% empty %}
-                <p>{{ profile_user.username }} has not made any comments yet.</p>
+                <p class="text-center text-muted">This user has not created any posts yet.</p>
             {% endfor %}
+            </div>
+        </div>
+        <!-- Comments Tab -->
+        <div class="tab-pane fade" id="comments" role="tabpanel">
+            <div class="list-group">
+            {% for comment in comments %}
+                <a href="{% url 'post_detail' comment.post.pk %}#comment-{{comment.pk}}" class="list-group-item list-group-item-action">"{{ comment.text|truncatewords:15 }}"</a>
+            {% empty %}
+                <p class="text-center text-muted">This user has not made any approved comments yet.</p>
+            {% endfor %}
+            </div>
         </div>
     </div>
 </div>

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html # <-- Import this
-from .models import Post, Comment, Notification, Genre
+from .models import Post, Comment, Notification, Genre ,SiteSettings
 
 
 @admin.register(Genre)
@@ -62,3 +62,7 @@ class CommentAdmin(admin.ModelAdmin):
 class NotificationAdmin(admin.ModelAdmin):
     list_display = ('user', 'message', 'created_at', 'read')
     list_filter = ('read', 'created_at')
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    pass

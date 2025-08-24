@@ -1,104 +1,103 @@
 {% extends "base.html" %}
 
+{% block title %}Admin Dashboard{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-0"><i class="bi bi-speedometer2"></i> Admin Dashboard</h1>
-</div>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 fw-bold"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</h1>
+    </div>
 
-<!-- SECTION 1: STATS CARDS -->
-<div class="row g-4 mb-4">
-    <div class="col-md-3">
-        <div class="card text-center h-100 shadow-sm">
-            <div class="card-body">
-                <h2 class="display-5 fw-bold">{{ stats.total_posts }}</h2>
-                <p class="card-text text-muted">Total Posts</p>
+    <!-- Stat Cards -->
+    <div class="row g-4">
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Total Posts</h5>
+                    <p class="card-text fs-2 fw-bold">{{ stats.total_posts }}</p>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card text-center h-100 shadow-sm">
-            <div class="card-body">
-                <h2 class="display-5 fw-bold">{{ stats.total_comments }}</h2>
-                <p class="card-text text-muted">Total Comments</p>
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Total Comments</h5>
+                    <p class="card-text fs-2 fw-bold">{{ stats.total_comments }}</p>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card text-center h-100 shadow-sm">
-            <div class="card-body">
-                <h2 class="display-5 fw-bold">{{ stats.total_users }}</h2>
-                <p class="card-text text-muted">Total Users</p>
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Total Users</h5>
+                    <p class="card-text fs-2 fw-bold">{{ stats.total_users }}</p>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-warning text-center h-100 shadow-sm">
-            <div class="card-body">
-                <h2 class="display-5 fw-bold">{{ stats.comments_awaiting_approval }}</h2>
-                <p class="card-text">Comments to Moderate</p>
-            </div>
+        <div class="col-lg-3 col-md-6">
+            <a href="{% url 'admin_comments' %}" class="text-decoration-none">
+                <div class="card shadow-sm text-center h-100 bg-warning text-dark">
+                    <div class="card-body">
+                        <h5 class="card-title">Comments to Moderate</h5>
+                        <p class="card-text fs-2 fw-bold">{{ stats.comments_to_moderate_count }}</p>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
-</div>
 
-<div class="row g-4">
-    <!-- SECTION 2: MODERATION QUEUE -->
-    <div class="col-md-12">
-        <div class="card shadow-sm">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Moderation Queue</h4>
-                <a href="{% url 'admin_comments' %}" class="btn btn-primary btn-sm">View All →</a>
-            </div>
-            <ul class="list-group list-group-flush">
+    <!-- Moderation Queue -->
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Moderation Queue</h5>
+            <a href="{% url 'admin_comments' %}" class="btn btn-primary btn-sm">View All →</a>
+        </div>
+        <div class="card-body">
+            {% if moderation_queue %}
+                <ul class="list-group list-group-flush">
                 {% for comment in moderation_queue %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="mb-1">"{{ comment.text|truncatewords:15 }}" <span class="badge bg-danger">{{ comment.toxicity_label }}</span></p>
-                        <small class="text-muted">By {{ comment.author }} on <a href="{% url 'post_detail' comment.post.pk %}">{{ comment.post.title }}</a></small>
-                    </div>
-                    <div class="text-nowrap ms-3">
-                        <a href="{% url 'approve_comment' comment.pk %}" class="btn btn-success btn-sm">Approve</a>
-                        <a href="{% url 'delete_comment' comment.pk %}" class="btn btn-danger btn-sm">Delete</a>
-                    </div>
-                </li>
-                {% empty %}
-                <li class="list-group-item text-muted">The moderation queue is empty. Great job!</li>
+                    <li class="list-group-item">"{{ comment.text|truncatewords:20 }}" by {{ comment.author.username }}</li>
                 {% endfor %}
-            </ul>
+                </ul>
+            {% else %}
+                <div class="alert alert-success mb-0">The moderation queue is empty. Great job!</div>
+            {% endif %}
         </div>
     </div>
 
-    <!-- SECTION 3: RECENT ACTIVITY (POSTS) -->
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-header"><h4 class="mb-0"><i class="bi bi-file-earmark-post"></i> Recent Posts</h4></div>
-            <ul class="list-group list-group-flush">
-                {% for post in recent_posts %}
-                <li class="list-group-item">
-                    <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
-                    <br><small class="text-muted">by {{ post.author }} - {{ post.created_at|timesince }} ago</small>
-                </li>
-                {% empty %}
-                <li class="list-group-item text-muted">No posts yet.</li>
-                {% endfor %}
-            </ul>
+    <!-- Recent Activity -->
+    <div class="row g-4 mt-3">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white"><h5 class="mb-0 fw-bold"><i class="bi bi-file-earmark-text me-2"></i>Recent Posts</h5></div>
+                <div class="card-body">
+                    {% if recent_posts %}
+                        <ul class="list-group list-group-flush">
+                        {% for post in recent_posts %}
+                            <li class="list-group-item">{{ post.title }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No posts yet.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- SECTION 4: RECENT ACTIVITY (COMMENTS) -->
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-header"><h4 class="mb-0"><i class="bi bi-chat-dots-fill"></i> Recent Approved Comments</h4></div>
-            <ul class="list-group list-group-flush">
-                {% for comment in recent_comments %}
-                <li class="list-group-item">
-                    "{{ comment.text|truncatewords:10 }}"
-                    <br><small class="text-muted">by {{ comment.author }} on <a href="{% url 'post_detail' comment.post.pk %}">{{ comment.post.title }}</a></small>
-                </li>
-                {% empty %}
-                <li class="list-group-item text-muted">No approved comments yet.</li>
-                {% endfor %}
-            </ul>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white"><h5 class="mb-0 fw-bold"><i class="bi bi-chat-dots me-2"></i>Recent Approved Comments</h5></div>
+                <div class="card-body">
+                    {% if recent_approved_comments %}
+                        <ul class="list-group list-group-flush">
+                        {% for comment in recent_approved_comments %}
+                            <li class="list-group-item">"{{ comment.text|truncatewords:10 }}" by {{ comment.author.username }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No approved comments yet.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </div>

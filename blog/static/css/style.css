@@ -1,0 +1,505 @@
+/* Note: The <style> tags have been removed. This is correct. */
+
+:root {
+  --primary-red: #DC2626;
+  --primary-dark: #991B1B;
+  --accent: #FEF2F2;
+  --gray-dark: #1F2937;
+  --gray-medium: #6B7280;
+  --gray-light: #F9FAFB;
+  --white: #FFFFFF;
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-main);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  color: var(--gray-dark);
+  padding-top: 80px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+main {
+  flex-grow: 1;
+  position: relative;
+}
+
+/* Enhanced Navbar */
+.navbar {
+  background: rgba(255, 255, 255, 0.85) !important; /* Semi-transparent background */
+  backdrop-filter: blur(15px); /* Modern blur effect */
+  box-shadow: var(--shadow-md);
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.75rem 0;
+  transition: all 0.3s ease;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--primary-red) !important; /* Use brand color */
+}
+
+.navbar-brand i {
+  margin-right: 0.5rem;
+  font-size: 1.75rem;
+  color: var(--primary-red); /* Make icon red too */
+}
+
+.nav-link {
+  color: var(--gray-dark) !important;
+  font-weight: 600; /* Bolder font */
+  padding: 0.5rem 1rem !important;
+  border-radius: 8px;
+  margin: 0 0.25rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+  color: var(--primary-red) !important;
+  background-color: var(--accent);
+}
+
+/* Style for the currently active page link */
+.nav-link.active {
+  color: var(--primary-red) !important;
+  background-color: var(--accent);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Container for search and user actions */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Space out the icons */
+}
+
+.navbar-actions .nav-link {
+  padding: 0.5rem !important;
+}
+
+.search-form input {
+  border-radius: 50px;
+  background-color: var(--gray-light);
+  border: 1px solid transparent;
+  width: 220px;
+  transition: all 0.3s ease;
+}
+
+.search-form input:focus {
+  border-color: var(--primary-red);
+  background-color: var(--white);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.search-btn {
+  background: var(--primary-red);
+  color: var(--white);
+  border-radius: 50%; /* Make it a circle */
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  margin-left: -45px; /* Pull it over the input */
+  z-index: 5;
+  transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+  background: var(--primary-dark);
+}
+
+/* Enhanced Dropdown */
+.dropdown-menu {
+  border: none;
+  border-radius: 16px;
+  box-shadow: var(--shadow-xl);
+  padding: 1rem;
+  margin-top: 0.5rem;
+  background: var(--white);
+}
+
+.dropdown-item {
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.dropdown-item:hover {
+  background: var(--accent);
+  color: var(--primary-red);
+  transform: translateX(4px);
+}
+
+/* Notification Badge Enhancement */
+.notification-badge {
+  position: relative;
+}
+
+.badge-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 50px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Enhanced Alerts */
+.alert {
+  border: none;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  font-weight: 500;
+  padding: 1rem 1.5rem;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+  color: #065F46;
+}
+
+.alert-warning {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  color: #92400E;
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+  color: #991B1B;
+}
+
+.alert-info {
+  background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+  color: #1E40AF;
+}
+
+/* Enhanced Footer */
+footer {
+  background: linear-gradient(135deg, var(--white) 0%, #f8fafc 100%);
+  border-top: 1px solid #e5e7eb;
+  padding: 3rem 0 2rem 0;
+  margin-top: 4rem;
+  position: relative;
+}
+
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary-red), transparent);
+}
+
+footer p {
+  color: var(--gray-medium);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+footer a {
+  color: var(--gray-medium);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  position: relative;
+}
+
+footer a:hover {
+  color: var(--primary-red);
+  transform: translateY(-1px);
+}
+
+footer a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background: var(--primary-red);
+  transition: width 0.3s ease;
+}
+
+footer a:hover::after {
+  width: 100%;
+}
+
+/* Register Button Enhancement */
+.btn-register {
+  background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-dark) 100%);
+  border: none;
+  color: var(--white);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-register:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  color: var(--white);
+}
+
+/* Container Enhancement */
+.container {
+  position: relative;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .search-form input {
+    width: 200px;
+  }
+  
+  .navbar-brand {
+    font-size: 1.3rem;
+  }
+  
+  body {
+    padding-top: 70px;
+  }
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Loading Animation for Links */
+a {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus States for Accessibility */
+.nav-link:focus,
+.btn:focus,
+input:focus {
+  outline: 2px solid var(--primary-red);
+  outline-offset: 2px;
+}
+body {
+    background: #f0f2f5 !important; /* A light gray, overriding the gradient */
+    color: #212529; /* Standard dark text color */
+}
+
+
+/* --- White Navbar Override --- */
+.navbar {
+    background: #ffffff !important; /* Solid white background */
+    backdrop-filter: none !important; /* Remove blur for a classic look */
+}
+.navbar-brand, .nav-link {
+    color: var(--primary-red) !important; /* Keep your brand red color */
+}
+.nav-link:hover, .nav-link.active {
+    color: var(--primary-dark) !important; /* Darker red on hover */
+    background-color: var(--accent) !important;
+}
+
+
+/* --- Main Post Card Styling --- */
+.card-post {
+    border: none;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.card-post:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.card-post .card-title a {
+    text-decoration: none;
+    color: var(--gray-dark);
+    transition: color 0.2s ease-in-out;
+}
+
+.card-post .card-title a:hover {
+    color: var(--primary-red) !important;
+}
+
+
+/* --- Sidebar Styling --- */
+.sidebar-widget {
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.sidebar-widget h4 {
+    border-bottom: 2px solid var(--primary-red);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.sidebar-widget ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.sidebar-widget li a {
+    text-decoration: none;
+    color: var(--gray-dark);
+    font-weight: 500;
+}
+
+.sidebar-widget li a:hover {
+    color: var(--primary-red);
+}
+
+
+/* --- Pagination Styling --- */
+.pagination .page-link {
+    color: var(--primary-red);
+    border: 1px solid #dee2e6;
+}
+.pagination .page-link:hover {
+    background-color: var(--accent);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-red);
+    border-color: var(--primary-red);
+    color: #fff;
+}
+/* --- Sidebar Post Item Styling --- */
+/* Add this to the bottom of your style.css */
+
+.sidebar-post-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover; /* Ensures images are not stretched */
+  border-radius: 0.25rem;
+}
+
+.sidebar-post-item h6 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+.dashboard-container {
+    background-color: #f8f9fa; /* Light grey tone */
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+/* --- Profile Page --- */
+.profile-banner {
+    height: 200px;
+    background-color: #e9ecef; /* A neutral banner color */
+    background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+    border-radius: 10px;
+    position: relative;
+    margin-bottom: 80px; /* Space for the avatar */
+}
+
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid white;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    /* Positioning to hang off the banner */
+    position: absolute;
+    bottom: -75px; /* Half of the height */
+    left: 50%;
+    transform: translateX(-50%);
+}
+/* ==========================================================================
+   NEW DASHBOARD LAYOUT STYLES (Add this to the bottom of your style.css)
+   ========================================================================== */
+
+.dashboard-layout {
+    display: flex;
+    gap: 2rem;
+}
+
+.sidebar {
+    flex-shrink: 0;
+    width: 280px;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    height: fit-content; /* Makes it not stretch full page height */
+}
+
+.sidebar-header {
+    text-align: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 1.5rem;
+}
+
+.sidebar-avatar {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #e9ecef;
+}
+
+.sidebar .list-group-item {
+    border: none;
+    font-weight: 600;
+}
+.sidebar .list-group-item.active {
+    background-color: var(--primary-red);
+    color: white;
+}
+.sidebar .list-group-item-action:hover {
+    background-color: var(--accent);
+}
+
+.content-area {
+    flex-grow: 1;
+}
+
+.stat-card {
+    border: none;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-card p {
+    font-size: 2.5rem;
+    font-weight: 700;
+}

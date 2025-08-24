@@ -4,6 +4,15 @@ from django.urls import reverse
 from django.utils import timezone
 from ckeditor.fields import RichTextField 
 
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+    bio = models.TextField(max_length=500, blank=True) # <-- ADD THIS LINE
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+    
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True, help_text="Enter a post genre (e.g. Technology, Lifestyle)")
 
@@ -67,3 +76,17 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user}: {self.message}"
+    
+class SiteSettings(models.Model):
+    """
+    A singleton model to store site-wide settings.
+    """
+    site_name = models.CharField(max_length=100, default="Sanity Check")
+    logo = models.ImageField(upload_to='logo/', blank=True, null=True)
+    favicon = models.ImageField(upload_to='logo/', blank=True, null=True)
+
+    def __str__(self):
+        return "Site Settings"
+
+    class Meta:
+        verbose_name_plural = "Site Settings"

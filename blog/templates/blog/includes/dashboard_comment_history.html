@@ -1,0 +1,7 @@
+<div class="list-group list-group-flush">
+    {% for comment in all_comments %}
+    <a href="{% url 'post_detail' comment.post.pk %}#comment-{{ comment.pk }}" class="list-group-item list-group-item-action">"{{ comment.text|truncatewords:20 }}"</a>
+    {% empty %}
+    <li class="list-group-item">You haven't posted any comments yet.</li>
+    {% endfor %}
+</div>
